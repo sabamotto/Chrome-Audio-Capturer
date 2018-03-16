@@ -1,0 +1,10 @@
+{
+  "extension_description": {
+    "message": "この拡張機能は開かれているタブで再生されているサウンドを録音して、WAVかMP3で保存できます。",
+    "description": "Extension description in Store"
+  },
+  "extension_action_title": {
+    "message": "Chrome Audio Capture: このタブの録音画面を開く",
+    "description": "Tooltip of extension action button"
+  }
+}
