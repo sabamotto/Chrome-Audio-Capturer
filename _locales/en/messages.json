@@ -92,10 +92,6 @@
     "message": "Low",
     "description": "Options view"
   },
-  "options_qualityMedium": {
-    "message": "Medium",
-    "description": "Options view"
-  },
   "options_qualityHigh": {
     "message": "High",
     "description": "Options view"

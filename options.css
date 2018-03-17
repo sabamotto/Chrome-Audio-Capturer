@@ -87,8 +87,20 @@ label {
 #qualityLi {
   display: none;
 }
+#qualityValue {
+  font-size: 16px;
+}
+.rangebar {
+  margin: 4px 24px;
+}
+.rangebar input {
+  margin: 0 4px;
+  width: 320px;
+  vertical-align: middle;
+}
 
 #maxTime {
   width: 30px;
   text-align: center;
+  font-size: 14px;
 }

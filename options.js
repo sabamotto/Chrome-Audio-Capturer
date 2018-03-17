@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const wavSelect = document.getElementById('wav');
   const quality = document.getElementById("quality");
   const qualityLi = document.getElementById("qualityLi");
+  const qualityValue = document.getElementById("qualityValue");
   const limitRemoved = document.getElementById("removeLimit");
   let currentFormat;
   //initial settings
@@ -70,21 +71,24 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (isNaN(maxTime.value)) {
       maxTime.value = 20;
     }
-  }
+  };
 
   mp3Select.onclick = () => {
     resetStatus();
     currentFormat = "mp3";
     qualityLi.style.display = "block";
-  }
+  };
 
   wavSelect.onclick = () => {
     resetStatus();
     currentFormat = "wav";
     qualityLi.style.display = "none";
-  }
+  };
 
   quality.onchange = resetStatus;
+  quality.oninput = () => {
+    qualityValue.innerHTML = `CBR ${quality.value}kbps`;
+  };
 
   limitRemoved.onchange = () => {
     if(limitRemoved.checked) {
@@ -94,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
       maxTime.disabled = false;
       resetStatus();
     }
-  }
+  };
 
   save.onclick = () => {
     chrome.storage.sync.set({
@@ -106,5 +110,5 @@ document.addEventListener('DOMContentLoaded', () => {
       limitRemoved: limitRemoved.checked
     });
     status.innerHTML = t("saved");
-  }
+  };
 });

@@ -20,11 +20,19 @@
         </li>
         <li id="qualityLi">
           <label for="quality" id="qualityLabel">MP3 Quality: </label>
-          <select id="quality">
-            <option value="96" id="qualityLow">Low</option>
-            <option value="192" id="qualityMedium">Medium</option>
-            <option value="320" id="qualityHigh">High</option>
-          </select>
+          <span id="qualityValue">CBR 192kbps</span>
+          <div class="rangebar">
+            <span id="qualityLow">Low</span>
+            <input type="range" id="quality" min="64" max="320" step="8" list="qualityScale">
+            <span id="qualityHigh">High</span>
+            <datalist id="qualityScale">
+              <option>64</option>
+              <option>128</option>
+              <option>192</option>
+              <option>256</option>
+              <option>320</option>
+            </datalist>
+          </div>
         </li>
       </ul>
     </div>

@@ -92,10 +92,6 @@
     "message": "低",
     "description": "Options view"
   },
-  "options_qualityMedium": {
-    "message": "中",
-    "description": "Options view"
-  },
   "options_qualityHigh": {
     "message": "高",
     "description": "Options view"
