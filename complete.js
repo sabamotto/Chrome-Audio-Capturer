@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         chrome.tabs.getCurrent((tab) => {
           chrome.tabs.remove(tab.id);
         });
-      }
+      };
 
       //if the encoding completed before the page has loaded
       if(request.audioURL) {
@@ -61,9 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
       saveButton.style.display = "inline-block";
     }
   });
+
   review.onclick = () => {
     chrome.tabs.create({url: "https://chrome.google.com/webstore/detail/chrome-audio-capture/kfokdmfpdnokpmpbjhjbcabgligoelgp/reviews"});
-  }
-
-
-})
+  };
+});

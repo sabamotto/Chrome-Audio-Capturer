@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
   limitRemoved.onchange = () => {
     if(limitRemoved.checked) {
       maxTime.disabled = true;
-      status.innerHTML = t("warning")
+      status.innerHTML = t("warning");
     } else {
       maxTime.disabled = false;
       status.innerHTML = "";
@@ -99,6 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
       quality: quality.value,
       limitRemoved: limitRemoved.checked
     });
-    status.innerHTML = t("saved")
+    status.innerHTML = t("saved");
   }
 });

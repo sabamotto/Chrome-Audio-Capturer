@@ -33,9 +33,9 @@ const displayStatus = function() { //function to handle the display of time and 
               chrome.storage.sync.set({
                 maxTime: 1200000
               });
-              timeLeft = 1200000 - (Date.now() - response)
+              timeLeft = 1200000 - (Date.now() - response);
             } else {
-              timeLeft = options.maxTime - (Date.now() - response)
+              timeLeft = options.maxTime - (Date.now() - response);
             }
             status.innerHTML = t("capturing");
             if(options.limitRemoved) {
@@ -74,7 +74,7 @@ const parseTime = function(time) { //function to display time remaining or time 
   } else if (seconds < 0) {
     seconds = '00';
   }
-  return `${minutes}:${seconds}`
+  return `${minutes}:${seconds}`;
 };
 
 //manipulation of the displayed buttons upon message from background
@@ -95,15 +95,15 @@ chrome.runtime.onMessage.addListener((request, sender) => {
           chrome.storage.sync.set({
             maxTime: 1200000
           });
-          timeLeft = 1200000 - (Date.now() - request.startTime)
+          timeLeft = 1200000 - (Date.now() - request.startTime);
         } else {
-          timeLeft = options.maxTime - (Date.now() - request.startTime)
+          timeLeft = options.maxTime - (Date.now() - request.startTime);
         }
         status.innerHTML = t("capturing");
         if(options.limitRemoved) {
           timeRem.innerHTML = `${parseTime(Date.now() - request.startTime)}`;
           interval = setInterval(() => {
-            timeRem.innerHTML = `${parseTime(Date.now() - request.startTime)}`
+            timeRem.innerHTML = `${parseTime(Date.now() - request.startTime)}`;
           }, 1000);
         } else {
           timeRem.innerHTML = t("remain", [parseTime(timeLeft)]);
@@ -132,6 +132,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 document.addEventListener('DOMContentLoaded', function() {
   localize();
   displayStatus();
+
   const startKey = document.getElementById("startKey");
   const stopKey = document.getElementById("stopKey");
   const startButton = document.getElementById('start');
@@ -153,5 +154,4 @@ document.addEventListener('DOMContentLoaded', function() {
   options.onclick = () => {chrome.runtime.openOptionsPage()};
   const git = document.getElementById("GitHub");
   git.onclick = () => {chrome.tabs.create({url: "https://github.com/arblast/Chrome-Audio-Capturer"})};
-
 });
