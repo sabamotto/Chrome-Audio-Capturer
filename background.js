@@ -291,6 +291,7 @@ const startCapture = function() {
       if (!sessionStorage.getItem(tabs[0].id)) {
         sessionStorage.setItem(tabs[0].id, Date.now());
         chrome.storage.sync.get({
+          quickMode: false,
           maxTime: 1200000,
           muteTab: false,
           format: "mp3",

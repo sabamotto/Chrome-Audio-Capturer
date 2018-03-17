@@ -12,6 +12,7 @@ const localize = function() {
 document.addEventListener('DOMContentLoaded', () => {
   localize();
 
+  const quick = document.getElementById('quick');
   const mute = document.getElementById('mute');
   const maxTime = document.getElementById('maxTime');
   const save = document.getElementById('save');
@@ -24,12 +25,14 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentFormat;
   //initial settings
   chrome.storage.sync.get({
+    quickMode: false,
     muteTab: false,
     maxTime: 1200000,
     format: "mp3",
     quality: 192,
     limitRemoved: false
   }, (options) => {
+    quick.checked = options.quickMode;
     mute.checked = options.muteTab;
     limitRemoved.checked = options.limitRemoved;
     maxTime.disabled = options.limitRemoved;
@@ -50,12 +53,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  mute.onchange = () => {
+  const resetStatus = () => {
     status.innerHTML = "";
-  }
+  };
+
+  mute.onchange = resetStatus;
+  
+  quick.onchange = resetStatus;
 
   maxTime.onchange = () => {
-    status.innerHTML = "";
+    resetStatus();
     if(maxTime.value > 20) {
       maxTime.value = 20;
     } else if (maxTime.value < 1) {
@@ -66,20 +73,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   mp3Select.onclick = () => {
+    resetStatus();
     currentFormat = "mp3";
     qualityLi.style.display = "block";
-    status.innerHTML = "";
   }
 
   wavSelect.onclick = () => {
+    resetStatus();
     currentFormat = "wav";
     qualityLi.style.display = "none";
-    status.innerHTML = "";
   }
 
-  quality.onchange = (e) => {
-    status.innerHTML = "";
-  }
+  quality.onchange = resetStatus;
 
   limitRemoved.onchange = () => {
     if(limitRemoved.checked) {
@@ -87,12 +92,13 @@ document.addEventListener('DOMContentLoaded', () => {
       status.innerHTML = t("warning");
     } else {
       maxTime.disabled = false;
-      status.innerHTML = "";
+      resetStatus();
     }
   }
 
   save.onclick = () => {
     chrome.storage.sync.set({
+      quickMode: quick.checked,
       muteTab: mute.checked,
       maxTime: maxTime.value*60000,
       format: currentFormat,

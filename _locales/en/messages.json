@@ -56,6 +56,10 @@
     "message": "Options",
     "description": "Options view"
   },
+  "options_quickLabel": {
+    "message": "Quick capture by clicking this extension icon",
+    "description": "Options view"
+  },
   "options_muteLabel": {
     "message": "Mute tabs that are being captured",
     "description": "Options view"

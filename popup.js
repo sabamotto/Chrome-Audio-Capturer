@@ -54,6 +54,13 @@ const displayStatus = function() { //function to handle the display of time and 
           finishButton.style.display = "block";
           cancelButton.style.display = "block";
         } else {
+          chrome.storage.sync.get({
+            quickMode: false
+          }, (options) => {
+            if (options.quickMode) {
+              chrome.runtime.sendMessage("startCapture");
+            }
+          });
           startButton.style.display = "block";
         }
       });
