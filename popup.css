@@ -10,7 +10,7 @@ body {
 #status, #timeRem {
   margin: 10px auto;
   text-align: center;
-  font-size: 20px;
+  font-size: 18px;
   white-space: nowrap;
 }
 
@@ -81,6 +81,7 @@ li {
 
 .button {
   display: none;
+  min-width: 80px;
   text-align: center;
   padding: 10px;
   border: 2px solid darkred;
@@ -92,7 +93,7 @@ li {
 }
 
 .button:hover {
-  color: red;
+  color: lavenderblush;
   background-color: darkred;
 }
 

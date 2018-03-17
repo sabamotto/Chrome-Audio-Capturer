@@ -1,4 +1,17 @@
+const t = function(id, param) {
+  return chrome.i18n.getMessage(`complete_${id}`, param);
+};
+
+const localize = function() {
+  document.querySelectorAll("*[id]").forEach((elem) => {
+    const localizedText = t(elem.id);
+    if (localizedText) elem.innerText = localizedText;
+  });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
+  localize();
+
   const encodeProgress = document.getElementById('encodeProgress');
   const saveButton = document.getElementById('saveCapture');
   const closeButton = document.getElementById('close');
@@ -11,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if(request.type === "createTab") {
       format = request.format;
       let startID = request.startID;
-      status.innerHTML = "Please wait..."
+      status.innerHTML = t("wait");
       closeButton.onclick = () => {
         chrome.runtime.sendMessage({cancelEncodeID: startID});
         chrome.tabs.getCurrent((tab) => {
@@ -22,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
       //if the encoding completed before the page has loaded
       if(request.audioURL) {
         encodeProgress.style.width = '100%';
-        status.innerHTML = "File is ready!"
+        status.innerHTML = t("ready");
         generateSave(request.audioURL);
       } else {
         encoding = true;
@@ -32,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //when encoding completes
     if(request.type === "encodingComplete" && encoding) {
       encoding = false;
-      status.innerHTML = "File is ready!";
+      status.innerHTML = t("ready");
       encodeProgress.style.width = '100%';
       generateSave(request.audioURL);
     }

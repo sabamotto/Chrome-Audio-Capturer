@@ -8,21 +8,21 @@
   <body>
     <div class="header"><img src="./icon.png"/> <h1>Chrome Audio Capture</h1></div>
     <div class="inner">
-      <h2>Options</h2>
+      <h2 id="options">Options</h2>
       <ul class="options-list">
-        <li><input type="checkbox" id="mute"><label for="mute">Mute tabs that are being captured</label></li>
-        <li class="time"><label for="maxTime">Maximum capture time <p class="limit">(enter value from 1 - 20)</p>: </label><input type="text" id="maxTime"> min(s)</li>
-        <li><input type="checkbox" id="removeLimit"><label for="removeLimit">Remove capture time limit (not recommended)</label></li>
-        <li id="outputType"><label for="outputType">Output file format:</label>
+        <li><input type="checkbox" id="mute"><label for="mute" id="muteLabel">Mute tabs that are being captured</label></li>
+        <li class="time"><label for="maxTime"><span id="maxLabel">Maximum capture time </span><p class="limit" id="maxLimit">(enter value from 1 - 20)</p>: </label><input type="text" id="maxTime"><span id="mins"> min(s)</span></li>
+        <li><input type="checkbox" id="removeLimit"><label for="removeLimit" id="removeLimitLabel">Remove capture time limit (not recommended)</label></li>
+        <li id="outputType"><label for="outputType" id="outputTypeLabel">Output file format:</label>
           <input class="radioChoice" id="mp3" type="radio" name="format" value="mp3"> <label for="mp3">.mp3</label>
           <input class="radioChoice" id="wav" type="radio" name="format" value="wav"> <label for="wav">.wav</label>
         </li>
         <li id="qualityLi">
-          <label for="quality">MP3 Quality: </label>
+          <label for="quality" id="qualityLabel">MP3 Quality: </label>
           <select id="quality">
-            <option value="96">Low</option>
-            <option value="192">Medium</option>
-            <option value="320">High</option>
+            <option value="96" id="qualityLow">Low</option>
+            <option value="192" id="qualityMedium">Medium</option>
+            <option value="320" id="qualityHigh">High</option>
           </select>
         </li>
       </ul>

@@ -1,4 +1,17 @@
+const t = function(id, param) {
+  return chrome.i18n.getMessage(`options_${id}`, param);
+};
+
+const localize = function() {
+  document.querySelectorAll("*[id]").forEach((elem) => {
+    const localizedText = t(elem.id);
+    if (localizedText) elem.innerText = localizedText;
+  });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
+  localize();
+
   const mute = document.getElementById('mute');
   const maxTime = document.getElementById('maxTime');
   const save = document.getElementById('save');
@@ -71,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
   limitRemoved.onchange = () => {
     if(limitRemoved.checked) {
       maxTime.disabled = true;
-      status.innerHTML = "WARNING: Recordings that are too long may not save properly!"
+      status.innerHTML = t("warning")
     } else {
       maxTime.disabled = false;
       status.innerHTML = "";
@@ -86,6 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
       quality: quality.value,
       limitRemoved: limitRemoved.checked
     });
-    status.innerHTML = "Settings saved!"
+    status.innerHTML = t("saved")
   }
 });

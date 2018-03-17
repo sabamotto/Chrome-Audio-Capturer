@@ -1,17 +1,16 @@
 let interval;
 let timeLeft;
 
-const t = function(id) {
-  return chrome.i18n.getMessage(`popup_${id}`);
-}
+const t = function(id, param) {
+  return chrome.i18n.getMessage(`popup_${id}`, param);
+};
 
 const localize = function() {
   document.querySelectorAll("*[id]").forEach((elem) => {
     const localizedText = t(elem.id);
-    console.log(`${elem.id} : ${localizedText}`);
     if (localizedText) elem.innerText = localizedText;
   });
-}
+};
 
 const displayStatus = function() { //function to handle the display of time and buttons
   chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
@@ -38,17 +37,17 @@ const displayStatus = function() { //function to handle the display of time and 
             } else {
               timeLeft = options.maxTime - (Date.now() - response)
             }
-            status.innerHTML = "Tab is currently being captured";
+            status.innerHTML = t("capturing");
             if(options.limitRemoved) {
               timeRem.innerHTML = `${parseTime(Date.now() - response)}`;
               interval = setInterval(() => {
                 timeRem.innerHTML = `${parseTime(Date.now() - response)}`;
               });
             } else {
-              timeRem.innerHTML = `${parseTime(timeLeft)} remaining`;
+              timeRem.innerHTML = t("remain", [parseTime(timeLeft)]);
               interval = setInterval(() => {
                 timeLeft = timeLeft - 1000;
-                timeRem.innerHTML = `${parseTime(timeLeft)} remaining`;
+                timeRem.innerHTML = t("remain", [parseTime(timeLeft)]);
               }, 1000);
             }
           });
@@ -60,7 +59,7 @@ const displayStatus = function() { //function to handle the display of time and 
       });
     // }
   });
-}
+};
 
 const parseTime = function(time) { //function to display time remaining or time elapsed
   let minutes = Math.floor((time/1000)/60);
@@ -76,7 +75,7 @@ const parseTime = function(time) { //function to display time remaining or time 
     seconds = '00';
   }
   return `${minutes}:${seconds}`
-}
+};
 
 //manipulation of the displayed buttons upon message from background
 chrome.runtime.onMessage.addListener((request, sender) => {
@@ -100,17 +99,17 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         } else {
           timeLeft = options.maxTime - (Date.now() - request.startTime)
         }
-        status.innerHTML = "Tab is currently being captured";
+        status.innerHTML = t("capturing");
         if(options.limitRemoved) {
           timeRem.innerHTML = `${parseTime(Date.now() - request.startTime)}`;
           interval = setInterval(() => {
             timeRem.innerHTML = `${parseTime(Date.now() - request.startTime)}`
           }, 1000);
         } else {
-          timeRem.innerHTML = `${parseTime(timeLeft)} remaining`;
+          timeRem.innerHTML = t("remain", [parseTime(timeLeft)]);
           interval = setInterval(() => {
             timeLeft = timeLeft - 1000;
-            timeRem.innerHTML = `${parseTime(timeLeft)} remaining`;
+            timeRem.innerHTML = t("remain", [parseTime(timeLeft)]);
           }, 1000);
         }
       });

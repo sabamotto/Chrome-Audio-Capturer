@@ -7,6 +7,7 @@
     "message": "Chrome Audio Capture: このタブの録音画面を開く",
     "description": "Tooltip of extension action button"
   },
+
   "popup_start": {
     "message": "録音開始",
     "description": "Popup view"
@@ -38,5 +39,94 @@
   "popup_options": {
     "message": "オプション",
     "description": "Popup view"
+  },
+  "popup_capturing": {
+    "message": "現在このタブは録音中です",
+    "description": "Status text in capturing"
+  },
+  "popup_remain": {
+    "message": "残り時間 $TIME$",
+    "description": "Remaining time in capturing",
+    "placeholders": {
+      "time": {"content": "$1", "example": "15:30"}
+    }
+  },
+
+  "options_options": {
+    "message": "オプション",
+    "description": "Options view"
+  },
+  "options_muteLabel": {
+    "message": "録音中はタブをミュートにする",
+    "description": "Options view"
+  },
+  "options_maxLabel": {
+    "message": "最大録音時間 ",
+    "description": "Options view"
+  },
+  "options_maxLimit": {
+    "message": "（1〜20の範囲で入力）",
+    "description": "Options view"
+  },
+  "options_mins": {
+    "message": "分",
+    "description": "Options view"
+  },
+  "options_removeLimitLabel": {
+    "message": "録音時間の制限を取り除く（非推奨）",
+    "description": "Options view"
+  },
+  "options_outputTypeLabel": {
+    "message": "出力するファイル形式:",
+    "description": "Options view"
+  },
+  "options_qualityLabel": {
+    "message": "MP3 変換品質: ",
+    "description": "Options view"
+  },
+  "options_qualityLow": {
+    "message": "低",
+    "description": "Options view"
+  },
+  "options_qualityMedium": {
+    "message": "中",
+    "description": "Options view"
+  },
+  "options_qualityHigh": {
+    "message": "高",
+    "description": "Options view"
+  },
+  "options_save": {
+    "message": "設定を保存する",
+    "description": "Options view"
+  },
+  "options_warning": {
+    "message": "注意: 長時間にわたり録音すると保存できない場合があります",
+    "description": "Status text on remove capture time limit"
+  },
+  "options_saved": {
+    "message": "設定が保存されました",
+    "description": "Status text on save settings"
+  },
+
+  "complete_encodingLabel": {
+    "message": "変換処理:",
+    "description": "Options view"
+  },
+  "complete_saveCapture": {
+    "message": "録音データを保存する",
+    "description": "Options view"
+  },
+  "complete_close": {
+    "message": "閉じる",
+    "description": "Options view"
+  },
+  "complete_wait": {
+    "message": "しばらくお待ち下さい...",
+    "description": "Status text in encoding"
+  },
+  "complete_ready": {
+    "message": "ファイルが準備できました！",
+    "description": "Status text on complete encoding"
   }
 }

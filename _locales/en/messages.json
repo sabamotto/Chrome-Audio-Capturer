@@ -7,6 +7,7 @@
     "message": "Chrome Audio Capture: Open recording interface",
     "description": "Tooltip of extension action button"
   },
+
   "popup_start": {
     "message": "Record",
     "description": "Popup view"
@@ -38,5 +39,94 @@
   "popup_options": {
     "message": "Options",
     "description": "Popup view"
+  },
+  "popup_capturing": {
+    "message": "Tab is currently being captured",
+    "description": "Status text in capturing"
+  },
+  "popup_remain": {
+    "message": "$TIME$ remaining",
+    "description": "Remaining time in capturing",
+    "placeholders": {
+      "time": {"content": "$1", "example": "15:30"}
+    }
+  },
+
+  "options_options": {
+    "message": "Options",
+    "description": "Options view"
+  },
+  "options_muteLabel": {
+    "message": "Mute tabs that are being captured",
+    "description": "Options view"
+  },
+  "options_maxLabel": {
+    "message": "Maximum capture time ",
+    "description": "Options view"
+  },
+  "options_maxLimit": {
+    "message": "(enter value from 1 - 20)",
+    "description": "Options view"
+  },
+  "options_mins": {
+    "message": "min(s)",
+    "description": "Options view"
+  },
+  "options_removeLimitLabel": {
+    "message": "Remove capture time limit (not recommended)",
+    "description": "Options view"
+  },
+  "options_outputTypeLabel": {
+    "message": "Output file format:",
+    "description": "Options view"
+  },
+  "options_qualityLabel": {
+    "message": "MP3 Quality: ",
+    "description": "Options view"
+  },
+  "options_qualityLow": {
+    "message": "Low",
+    "description": "Options view"
+  },
+  "options_qualityMedium": {
+    "message": "Medium",
+    "description": "Options view"
+  },
+  "options_qualityHigh": {
+    "message": "High",
+    "description": "Options view"
+  },
+  "options_save": {
+    "message": "Save Settings",
+    "description": "Options view"
+  },
+  "options_warning": {
+    "message": "WARNING: Recordings that are too long may not save properly!",
+    "description": "Status text on remove capture time limit"
+  },
+  "options_saved": {
+    "message": "Settings saved!",
+    "description": "Status text on save settings"
+  },
+
+  "complete_encodingLabel": {
+    "message": "Encoding Progress:",
+    "description": "Options view"
+  },
+  "complete_saveCapture": {
+    "message": "Save Capture",
+    "description": "Options view"
+  },
+  "complete_close": {
+    "message": "Close",
+    "description": "Options view"
+  },
+  "complete_wait": {
+    "message": "Please wait...",
+    "description": "Status text in encoding"
+  },
+  "complete_ready": {
+    "message": "File is ready!",
+    "description": "Status text on complete encoding"
   }
 }
