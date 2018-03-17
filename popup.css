@@ -13,6 +13,9 @@ body {
   font-size: 18px;
   white-space: nowrap;
 }
+#status {
+  color: orangered;
+}
 
 .header {
   display: flex;

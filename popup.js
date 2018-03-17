@@ -27,27 +27,37 @@ const displayStatus = function() { //function to handle the display of time and 
         if(response) {
           chrome.storage.sync.get({
             maxTime: 1200000,
-            limitRemoved: false
+            limitRemoved: false,
+            detection: false
           }, (options) => {
+            let lastTime = Date.now();
+            if (response.paused) {
+              status.innerHTML = t(options.detection ? "detecting" : "pausing");
+              lastTime = response.startPauseTime;
+            } else {
+              status.innerHTML = t("capturing");
+            }
             if(options.maxTime > 1200000) {
               chrome.storage.sync.set({
                 maxTime: 1200000
               });
-              timeLeft = 1200000 - (Date.now() - response);
+              timeLeft = 1200000 - (lastTime - response.startTime);
             } else {
-              timeLeft = options.maxTime - (Date.now() - response);
+              timeLeft = options.maxTime - (lastTime - response.startTime);
             }
-            status.innerHTML = t("capturing");
             if(options.limitRemoved) {
-              timeRem.innerHTML = `${parseTime(Date.now() - response)}`;
+              timeRem.innerHTML = `${parseTime(lastTime - response.startTime)}`;
               interval = setInterval(() => {
-                timeRem.innerHTML = `${parseTime(Date.now() - response)}`;
+                if (!response.paused)
+                  timeRem.innerHTML = `${parseTime(Date.now() - response.startTime)}`;
               });
             } else {
               timeRem.innerHTML = t("remain", [parseTime(timeLeft)]);
               interval = setInterval(() => {
-                timeLeft = timeLeft - 1000;
-                timeRem.innerHTML = t("remain", [parseTime(timeLeft)]);
+                if (!response.paused) {
+                  timeLeft = timeLeft - 1000;
+                  timeRem.innerHTML = t("remain", [parseTime(timeLeft)]);
+                }
               }, 1000);
             }
           });
@@ -96,27 +106,37 @@ chrome.runtime.onMessage.addListener((request, sender) => {
     if(request.captureStarted && request.captureStarted === tabs[0].id) {
       chrome.storage.sync.get({
         maxTime: 1200000,
-        limitRemoved: false
+        limitRemoved: false,
+        detection: false
       }, (options) => {
+        let lastTime = Date.now();
+        if (request.paused) {
+          status.innerHTML = t(options.detection ? "detecting" : "pausing");
+          lastTime = request.startTime;
+        } else {
+          status.innerHTML = t("capturing");
+        }
         if(options.maxTime > 1200000) {
           chrome.storage.sync.set({
             maxTime: 1200000
           });
-          timeLeft = 1200000 - (Date.now() - request.startTime);
+          timeLeft = 1200000 - (lastTime - request.startTime);
         } else {
-          timeLeft = options.maxTime - (Date.now() - request.startTime);
+          timeLeft = options.maxTime - (lastTime - request.startTime);
         }
-        status.innerHTML = t("capturing");
         if(options.limitRemoved) {
-          timeRem.innerHTML = `${parseTime(Date.now() - request.startTime)}`;
+          timeRem.innerHTML = `${parseTime(lastTime - request.startTime)}`;
           interval = setInterval(() => {
-            timeRem.innerHTML = `${parseTime(Date.now() - request.startTime)}`;
+            if (!request.paused)
+              timeRem.innerHTML = `${parseTime(Date.now() - request.startTime)}`;
           }, 1000);
         } else {
           timeRem.innerHTML = t("remain", [parseTime(timeLeft)]);
           interval = setInterval(() => {
-            timeLeft = timeLeft - 1000;
-            timeRem.innerHTML = t("remain", [parseTime(timeLeft)]);
+            if (!request.paused) {
+              timeLeft = timeLeft - 1000;
+              timeRem.innerHTML = t("remain", [parseTime(timeLeft)]);
+            }
           }, 1000);
         }
       });
@@ -130,6 +150,12 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       startButton.style.display = "block";
       timeRem.innerHTML = "";
       clearInterval(interval);
+    } else if(request.capturePaused && request.capturePaused === tabs[0].id) {
+      status.innerHTML = t("pausing");
+      clearInterval(interval);
+    } else if(request.captureResumed && request.captureResumed === tabs[0].id) {
+      clearInterval(interval);
+      displayStatus();
     }
   });
 });

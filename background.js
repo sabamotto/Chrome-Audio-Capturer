@@ -23,6 +23,7 @@ const CONFIGS = {
   workerDir: "/workers/",     // worker scripts dir (end with /)
   numChannels: 2,     // number of channels
   encoding: "wav",    // encoding (can be changed at runtime)
+  paused: false,            // paused recording
 
   // runtime options
   options: {
@@ -30,6 +31,7 @@ const CONFIGS = {
     encodeAfterRecord: true, // process encoding after recording
     progressInterval: 1000,   // encoding progress report interval (millisec)
     bufferSize: undefined,    // buffer size (use browser default)
+    detection: false,         // sound detection starter
 
     // encoding-specific options
     wav: {
@@ -83,10 +85,27 @@ class Recorder {
         this.numChannels, this.numChannels);
       this.input.connect(this.processor);
       this.processor.connect(this.context.destination);
+      let recorder = this;
+      this.paused = this.options.detection;
+      this.startPauseTime = this.paused ? Date.now() : 0;
       this.processor.onaudioprocess = function(event) {
-        for (var ch = 0; ch < numChannels; ++ch)
+        let detection = recorder.paused && recorder.options.detection;
+        let hasAudio = !detection;
+        for (var ch = 0; ch < numChannels; ++ch) {
           buffer[ch] = event.inputBuffer.getChannelData(ch);
-        worker.postMessage({ command: "record", buffer: buffer });
+          if (detection && !hasAudio) {
+            for (var t = 0; t < buffer[ch].length; ++t) {
+              if (buffer[ch][t] !== 0.0) {
+                hasAudio = true;
+                recorder.resumeRecording();
+                break;
+              }
+            }
+          }
+        }
+        if (hasAudio) {
+          worker.postMessage({ command: "record", buffer: buffer });
+        }
       };
       this.worker.postMessage({
         command: "start",
@@ -94,6 +113,17 @@ class Recorder {
       });
       this.startTime = Date.now();
     }
+  }
+
+  pauseRecording() {
+    this.paused = true;
+    this.startPauseTime = Date.now();
+    this.onPause(this);
+  }
+
+  resumeRecording() {
+    this.paused = false;
+    this.onResume(this);
   }
 
   cancelRecording() {
@@ -162,10 +192,12 @@ class Recorder {
   onEncodingProgress(recorder, progress) {}
   onEncodingCanceled(recorder) {}
   onComplete(recorder, blob) {}
+  onPause(recorder) {}
+  onResume(recorder) {}
 
 }
 
-const audioCapture = (timeLimit, muteTab, format, quality, limitRemoved) => {
+const audioCapture = (timeLimit, muteTab, format, quality, limitRemoved, detection) => {
   chrome.tabCapture.capture({audio: true}, (stream) => { // sets up stream for capture
     let startTabId; //tab when the capture is started
     let timeout;
@@ -185,6 +217,7 @@ const audioCapture = (timeLimit, muteTab, format, quality, limitRemoved) => {
     if (format === "mp3") {
       mediaRecorder.setOptions({mp3: {bitRate: quality}});
     }
+    mediaRecorder.setOptions({detection: detection});
     mediaRecorder.startRecording();
 
     function onStopCommand(command) { //keypress
@@ -197,6 +230,8 @@ const audioCapture = (timeLimit, muteTab, format, quality, limitRemoved) => {
         stopCapture();
       } else if (request === "cancelCapture") {
         cancelCapture();
+      } else if (request === "resumeCapture") {
+        resumeCapture();
       } else if (request.cancelEncodeID) {
         if (request.cancelEncodeID === startTabId && mediaRecorder) {
           mediaRecorder.cancelEncoding();
@@ -211,12 +246,42 @@ const audioCapture = (timeLimit, muteTab, format, quality, limitRemoved) => {
         chrome.tabs.sendMessage(completeTabID, {type: "encodingComplete", audioURL});
       }
       mediaRecorder = null;
-    }
+    };
     mediaRecorder.onEncodingProgress = (recorder, progress) => {
       if (completeTabID) {
         chrome.tabs.sendMessage(completeTabID, {type: "encodingProgress", progress: progress});
       }
-    }
+    };
+    mediaRecorder.onPause = (recorder) => {
+      let data = JSON.parse(sessionStorage.getItem(startTabId));
+      if (!data) {
+        data = {
+          startTime: recorder.startTime,
+          startPauseTime: recorder.startPauseTime,
+          paused: true
+        };
+      } else {
+        data.startPauseTime = recorder.startPauseTime;
+        data.paused = true;
+      }
+      sessionStorage.setItem(startTabId, JSON.stringify(data));
+      chrome.runtime.sendMessage({capturePaused: startTabId});
+    };
+    mediaRecorder.onResume = (recorder) => {
+      let data = JSON.parse(sessionStorage.getItem(startTabId));
+      if (!data) {
+        data = {
+          startTime: recorder.startTime,
+          startPauseTime: recorder.startPauseTime,
+          paused: false
+        };
+      } else {
+        data.startTime += Date.now() - recorder.startPauseTime;
+        data.paused = false;
+      }
+      sessionStorage.setItem(startTabId, JSON.stringify(data));
+      chrome.runtime.sendMessage({captureResumed: startTabId});
+    };
 
     const stopCapture = function() {
       let endTabId;
@@ -234,7 +299,7 @@ const audioCapture = (timeLimit, muteTab, format, quality, limitRemoved) => {
           });
           closeStream(endTabId);
         }
-      })
+      });
     }
 
     const cancelCapture = function() {
@@ -245,7 +310,29 @@ const audioCapture = (timeLimit, muteTab, format, quality, limitRemoved) => {
           mediaRecorder.cancelRecording();
           closeStream(endTabId);
         }
-      })
+      });
+    }
+
+    const pauseCapture = function() {
+      let endTabId;
+      chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+        endTabId = tabs[0].id;
+        if (mediaRecorder && startTabId === endTabId){
+          mediaRecorder.pauseRecording();
+          chrome.runtime.sendMessage({capturePaused: endTabId});
+        }
+      });
+    }
+
+    const resumeCapture = function() {
+      let endTabId;
+      chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+        endTabId = tabs[0].id;
+        if (mediaRecorder && startTabId === endTabId){
+          mediaRecorder.resumeRecording();
+          chrome.runtime.sendMessage({captureResumed: endTabId});
+        }
+      });
     }
 
 //removes the audio context and closes recorder to save memory
@@ -274,7 +361,7 @@ const audioCapture = (timeLimit, muteTab, format, quality, limitRemoved) => {
 //sends reponses to and from the popup menu
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.currentTab && sessionStorage.getItem(request.currentTab)) {
-    sendResponse(sessionStorage.getItem(request.currentTab));
+    sendResponse(JSON.parse(sessionStorage.getItem(request.currentTab)));
   } else if (request.currentTab){
     sendResponse(false);
   } else if (request === "startCapture") {
@@ -289,22 +376,27 @@ const startCapture = function() {
     //   chrome.tabs.create({url: "error.html"});
     // } else {
       if (!sessionStorage.getItem(tabs[0].id)) {
-        sessionStorage.setItem(tabs[0].id, Date.now());
         chrome.storage.sync.get({
-          quickMode: false,
           maxTime: 1200000,
           muteTab: false,
           format: "mp3",
           quality: 192,
-          limitRemoved: false
+          limitRemoved: false,
+          detection: false
         }, (options) => {
+          const startTime = Date.now();
+          sessionStorage.setItem(tabs[0].id, JSON.stringify({
+            startTime: startTime,
+            startPauseTime: startTime,
+            paused: options.detection
+          }));
           let time = options.maxTime;
           if (time > 1200000) {
             time = 1200000
           }
-          audioCapture(time, options.muteTab, options.format, options.quality, options.limitRemoved);
+          audioCapture(time, options.muteTab, options.format, options.quality, options.limitRemoved, options.detection);
+          chrome.runtime.sendMessage({captureStarted: tabs[0].id, startTime: startTime, paused: options.detection});
         });
-        chrome.runtime.sendMessage({captureStarted: tabs[0].id, startTime: Date.now()});
       }
     // }
   });

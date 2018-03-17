@@ -41,7 +41,15 @@
     "description": "Popup view"
   },
   "popup_capturing": {
-    "message": "現在このタブは録音中です",
+    "message": "録音中",
+    "description": "Status text in capturing"
+  },
+  "popup_detecting": {
+    "message": "音声検出待ち..",
+    "description": "Status text in capturing"
+  },
+  "popup_pausing": {
+    "message": "一時停止中",
     "description": "Status text in capturing"
   },
   "popup_remain": {
@@ -62,6 +70,10 @@
   },
   "options_muteLabel": {
     "message": "録音中はタブをミュートにする",
+    "description": "Options view"
+  },
+  "options_detectionLabel": {
+    "message": "音声出力を検出するまで録音を一時停止する",
     "description": "Options view"
   },
   "options_maxLabel": {

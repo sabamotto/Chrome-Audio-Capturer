@@ -41,7 +41,15 @@
     "description": "Popup view"
   },
   "popup_capturing": {
-    "message": "Tab is currently being captured",
+    "message": "Capturing",
+    "description": "Status text in capturing"
+  },
+  "popup_detecting": {
+    "message": "Audio Detecting..",
+    "description": "Status text in capturing"
+  },
+  "popup_pausing": {
+    "message": "Pausing",
     "description": "Status text in capturing"
   },
   "popup_remain": {
@@ -62,6 +70,10 @@
   },
   "options_muteLabel": {
     "message": "Mute tabs that are being captured",
+    "description": "Options view"
+  },
+  "options_detectionLabel": {
+    "message": "Pause recording until audio output is detected",
     "description": "Options view"
   },
   "options_maxLabel": {

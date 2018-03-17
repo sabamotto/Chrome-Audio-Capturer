@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const quick = document.getElementById('quick');
   const mute = document.getElementById('mute');
+  const detection = document.getElementById('detection');
   const maxTime = document.getElementById('maxTime');
   const save = document.getElementById('save');
   const status = document.getElementById('status');
@@ -31,10 +32,12 @@ document.addEventListener('DOMContentLoaded', () => {
     maxTime: 1200000,
     format: "mp3",
     quality: 192,
-    limitRemoved: false
+    limitRemoved: false,
+    detection: false
   }, (options) => {
     quick.checked = options.quickMode;
     mute.checked = options.muteTab;
+    detection.checked = options.detection;
     limitRemoved.checked = options.limitRemoved;
     maxTime.disabled = options.limitRemoved;
     maxTime.value = options.maxTime/60000;
@@ -61,6 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
   mute.onchange = resetStatus;
   
   quick.onchange = resetStatus;
+
+  detection.onchange = resetStatus;
 
   maxTime.onchange = () => {
     resetStatus();
@@ -107,7 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
       maxTime: maxTime.value*60000,
       format: currentFormat,
       quality: quality.value,
-      limitRemoved: limitRemoved.checked
+      limitRemoved: limitRemoved.checked,
+      detection: detection.checked
     });
     status.innerHTML = t("saved");
   };
