@@ -6,5 +6,37 @@
   "extension_action_title": {
     "message": "Chrome Audio Capture: このタブの録音画面を開く",
     "description": "Tooltip of extension action button"
+  },
+  "popup_start": {
+    "message": "録音開始",
+    "description": "Popup view"
+  },
+  "popup_finish": {
+    "message": "保存",
+    "description": "Popup view"
+  },
+  "popup_cancel": {
+    "message": "キャンセル",
+    "description": "Popup view"
+  },
+  "popup_hotkeys": {
+    "message": "ホットキー:",
+    "description": "Popup view"
+  },
+  "popup_startDesc": {
+    "message": " : 現在のタブの録音を始めます",
+    "description": "Popup view"
+  },
+  "popup_stopDesc": {
+    "message": " : 現在のタブの録音を終了します",
+    "description": "Popup view"
+  },
+  "popup_captureLimit": {
+    "message": "Chromeのメモリ制限により、最大録音時間は20分ほどになります。",
+    "description": "Popup view"
+  },
+  "popup_options": {
+    "message": "オプション",
+    "description": "Popup view"
   }
 }

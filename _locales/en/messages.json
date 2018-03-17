@@ -6,5 +6,37 @@
   "extension_action_title": {
     "message": "Chrome Audio Capture: Open recording interface",
     "description": "Tooltip of extension action button"
+  },
+  "popup_start": {
+    "message": "Record",
+    "description": "Popup view"
+  },
+  "popup_finish": {
+    "message": "Save",
+    "description": "Popup view"
+  },
+  "popup_cancel": {
+    "message": "Cancel",
+    "description": "Popup view"
+  },
+  "popup_hotkeys": {
+    "message": "Hotkeys:",
+    "description": "Popup view"
+  },
+  "popup_startDesc": {
+    "message": " to start capture on current tab",
+    "description": "Popup view"
+  },
+  "popup_stopDesc": {
+    "message": " to stop capture on current tab",
+    "description": "Popup view"
+  },
+  "popup_captureLimit": {
+    "message": "Currently the max capture time is 20 minutes due to Chrome memory contraints",
+    "description": "Popup view"
+  },
+  "popup_options": {
+    "message": "Options",
+    "description": "Popup view"
   }
 }

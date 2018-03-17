@@ -1,9 +1,10 @@
 body, h2 {
-  font-family: Ubuntu, sans-serif;
+  font-family: "Hiragino Kaku Gothic", Ubuntu, sans-serif;
 }
 
 body {
   margin: 10px 15px 5px 15px;
+  max-width: 320px;
 }
 
 #status, #timeRem {
@@ -16,19 +17,24 @@ body {
 .header {
   display: flex;
   align-items: center;
-  padding-bottom: 15px;
+  padding-bottom: 10px;
   border-bottom: 2px solid darkred;
   white-space: nowrap;
 }
 
 .header img {
-  height: 64px;
-  margin: 0 20px 0 0;
+  height: 60px;
+  margin: 0 12px 0 0;
+}
+
+.header h1 {
+  font-size: 18px;
 }
 
 ul {
   font-size: 16px;
   font-weight: bold;
+  font-family: initial;
   list-style: none;
   padding: 0;
 }
@@ -37,12 +43,20 @@ li {
   font-size: 14px;
   font-weight: normal;
   white-space: nowrap;
+  padding: 3px 0;
   margin: 0 0 0 5px;
+}
+
+.keys {
+  padding: 1px 3px;
+  background-color: #eee;
+  border: 1px solid #777;
+  border-radius: 3px;
+  font-family: 'Lucida Grande', Ubuntu, sans-serif;
 }
 
 .extra {
   font-family: sans-serif;
-  white-space: nowrap;
   font-style: italic;
   margin: 3px;
 }

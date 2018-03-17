@@ -9,18 +9,15 @@
     <div id="status"></div>
     <div id="timeRem"></div>
     <div class="buttonContainer">
-      <div class="button" id="start">Start Capture</div>
-      <div class="button" id="finish">Save Capture</div>
-      <div class="button" id="cancel">Cancel Capture</div>
+      <div class="button" id="start">Record</div>
+      <div class="button" id="finish">Save</div>
+      <div class="button" id="cancel">Cancel</div>
     </div>
-    <div class="notes">After capture is finished, a new tab will be opened automatically for you to
-name and save the file. Please do not close the tab before saving the file!</div>
-    <ul> Hotkeys:
-      <li id="startKey">Ctrl/Command + Shift +   to start capture on current tab</li>
-      <li id="endKey">Ctrl/Command + Shift + X to stop capture on current tab</li>
+    <ul> <span id="hotkeys">Hotkeys:</span>
+      <li><span class="keys" id="startKey"></span><span id="startDesc"> to start capture on current tab</span></li>
+      <li><span class="keys" id="stopKey"></span><span id="stopDesc"> to stop capture on current tab</span></li>
     </ul>
-    <p class="extra">Hotkeys may not work if another extension is using the same hotkeys</p>
-    <p class="extra">Currently the max capture time is 20 minutes due to Chrome memory contraints</p>
+    <p class="extra" id="captureLimit">Currently the max capture time is 20 minutes due to Chrome memory contraints</p>
     <div class="links">
       <p id="options">Options</p>
       <p id="GitHub">GitHub</p>

@@ -1,6 +1,18 @@
 let interval;
 let timeLeft;
 
+const t = function(id) {
+  return chrome.i18n.getMessage(`popup_${id}`);
+}
+
+const localize = function() {
+  document.querySelectorAll("*[id]").forEach((elem) => {
+    const localizedText = t(elem.id);
+    console.log(`${elem.id} : ${localizedText}`);
+    if (localizedText) elem.innerText = localizedText;
+  });
+}
+
 const displayStatus = function() { //function to handle the display of time and buttons
   chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
     const status = document.getElementById("status");
@@ -119,9 +131,10 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 
 //initial display for popup menu when opened
 document.addEventListener('DOMContentLoaded', function() {
+  localize();
   displayStatus();
   const startKey = document.getElementById("startKey");
-  const endKey = document.getElementById("endKey");
+  const stopKey = document.getElementById("stopKey");
   const startButton = document.getElementById('start');
   const finishButton = document.getElementById('finish');
   const cancelButton = document.getElementById('cancel');
@@ -130,11 +143,11 @@ document.addEventListener('DOMContentLoaded', function() {
   cancelButton.onclick = () => {chrome.runtime.sendMessage("cancelCapture")};
   chrome.runtime.getPlatformInfo((info) => {
     if(info.os === "mac") {
-      startKey.innerHTML = "Command + Shift + U to start capture on current tab";
-      endKey.innerHTML = "Command + Shift + X to stop capture on current tab";
+      startKey.innerHTML = "&#x21E7;&#x2318;U";
+      stopKey.innerHTML = "&#x21E7;&#x2318;X";
     } else {
-      startKey.innerHTML = "Ctrl + Shift + S to start capture on current tab";
-      endKey.innerHTML = "Ctrl + Shift + X to stop capture on current tab";
+      startKey.innerHTML = "Ctrl + Shift + S";
+      stopKey.innerHTML = "Ctrl + Shift + X";
     }
   })
   const options = document.getElementById("options");
