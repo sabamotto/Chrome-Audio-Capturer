@@ -32,6 +32,7 @@ const CONFIGS = {
     progressInterval: 1000,   // encoding progress report interval (millisec)
     bufferSize: undefined,    // buffer size (use browser default)
     detection: false,         // sound detection starter
+    endDetection: false,         // sound end-detection stopper
 
     // encoding-specific options
     wav: {
@@ -89,10 +90,22 @@ class Recorder {
       this.paused = this.options.detection;
       this.startPauseTime = this.paused ? Date.now() : 0;
       this.processor.onaudioprocess = function(event) {
-        let detection = recorder.paused && recorder.options.detection;
+        const detection = recorder.paused && recorder.options.detection;
+        const endDetection = !recorder.paused && recorder.options.endDetection;
         let hasAudio = !detection;
+        let finish = true;
         for (var ch = 0; ch < numChannels; ++ch) {
           buffer[ch] = event.inputBuffer.getChannelData(ch);
+          // detect end of the audio output
+          if (endDetection && hasAudio) {
+            for (var t = 0; t < buffer[ch].length; ++t) {
+              if (buffer[ch][t] !== 0.0) {
+                finish = false;
+                break;
+              }
+            }
+          }
+          // detect start of the audio output
           if (detection && !hasAudio) {
             for (var t = 0; t < buffer[ch].length; ++t) {
               if (buffer[ch][t] !== 0.0) {
@@ -105,6 +118,9 @@ class Recorder {
         }
         if (hasAudio) {
           worker.postMessage({ command: "record", buffer: buffer });
+          if (endDetection && finish) {
+            recorder.onAutoFinish(recorder);
+          }
         }
       };
       this.worker.postMessage({
@@ -194,10 +210,11 @@ class Recorder {
   onComplete(recorder, blob) {}
   onPause(recorder) {}
   onResume(recorder) {}
+  onAutoFinish(recorder) {}
 
 }
 
-const audioCapture = (timeLimit, muteTab, format, quality, limitRemoved, detection) => {
+const audioCapture = (timeLimit, muteTab, format, quality, limitRemoved, detection, endDetection) => {
   chrome.tabCapture.capture({audio: true}, (stream) => { // sets up stream for capture
     let startTabId; //tab when the capture is started
     let timeout;
@@ -217,7 +234,10 @@ const audioCapture = (timeLimit, muteTab, format, quality, limitRemoved, detecti
     if (format === "mp3") {
       mediaRecorder.setOptions({mp3: {bitRate: quality}});
     }
-    mediaRecorder.setOptions({detection: detection});
+    mediaRecorder.setOptions({
+      detection: detection,
+      endDetection: detection && endDetection
+    });
     mediaRecorder.startRecording();
 
     function onStopCommand(command) { //keypress
@@ -281,6 +301,9 @@ const audioCapture = (timeLimit, muteTab, format, quality, limitRemoved, detecti
       }
       sessionStorage.setItem(startTabId, JSON.stringify(data));
       chrome.runtime.sendMessage({captureResumed: startTabId});
+    };
+    mediaRecorder.onAutoFinish = (recorder) => {
+      stopCapture();
     };
 
     const stopCapture = function() {
@@ -382,7 +405,8 @@ const startCapture = function() {
           format: "mp3",
           quality: 192,
           limitRemoved: false,
-          detection: false
+          detection: false,
+          endDetection: false
         }, (options) => {
           const startTime = Date.now();
           sessionStorage.setItem(tabs[0].id, JSON.stringify({
@@ -394,7 +418,15 @@ const startCapture = function() {
           if (time > 1200000) {
             time = 1200000
           }
-          audioCapture(time, options.muteTab, options.format, options.quality, options.limitRemoved, options.detection);
+          audioCapture(
+            time,
+            options.muteTab,
+            options.format,
+            options.quality,
+            options.limitRemoved,
+            options.detection,
+            options.endDetection
+            );
           chrome.runtime.sendMessage({captureStarted: tabs[0].id, startTime: startTime, paused: options.detection});
         });
       }

@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const quick = document.getElementById('quick');
   const mute = document.getElementById('mute');
   const detection = document.getElementById('detection');
+  const endDetection = document.getElementById('endDetection');
+  const endDetectionLi = document.getElementById('endDetectionLi');
   const maxTime = document.getElementById('maxTime');
   const save = document.getElementById('save');
   const status = document.getElementById('status');
@@ -33,11 +35,14 @@ document.addEventListener('DOMContentLoaded', () => {
     format: "mp3",
     quality: 192,
     limitRemoved: false,
-    detection: false
+    detection: false,
+    endDetection: false
   }, (options) => {
     quick.checked = options.quickMode;
     mute.checked = options.muteTab;
     detection.checked = options.detection;
+    endDetection.checked = options.endDetection;
+    endDetectionLi.style.display = options.detection ? "" : "none";
     limitRemoved.checked = options.limitRemoved;
     maxTime.disabled = options.limitRemoved;
     maxTime.value = options.maxTime/60000;
@@ -65,7 +70,12 @@ document.addEventListener('DOMContentLoaded', () => {
   
   quick.onchange = resetStatus;
 
-  detection.onchange = resetStatus;
+  detection.onchange = () => {
+    resetStatus();
+    endDetectionLi.style.display = detection.checked ? "" : "none";
+  };
+
+  endDetection.onchange = resetStatus;
 
   maxTime.onchange = () => {
     resetStatus();
@@ -113,7 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
       format: currentFormat,
       quality: quality.value,
       limitRemoved: limitRemoved.checked,
-      detection: detection.checked
+      detection: detection.checked,
+      endDetection: endDetection.checked
     });
     status.innerHTML = t("saved");
   };

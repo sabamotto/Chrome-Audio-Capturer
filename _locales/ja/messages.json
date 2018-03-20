@@ -76,6 +76,10 @@
     "message": "音声出力を検出するまで録音を一時停止する",
     "description": "Options view"
   },
+  "options_endDetectionLabel": {
+    "message": "無音を検出したら録音を終了する",
+    "description": "Options view"
+  },
   "options_maxLabel": {
     "message": "最大録音時間 ",
     "description": "Options view"

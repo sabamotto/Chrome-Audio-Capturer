@@ -76,6 +76,10 @@
     "message": "Pause recording until audio output is detected",
     "description": "Options view"
   },
+  "options_endDetectionLabel": {
+    "message": "Auto stop on detect silence signals",
+    "description": "Options view"
+  },
   "options_maxLabel": {
     "message": "Maximum capture time ",
     "description": "Options view"
